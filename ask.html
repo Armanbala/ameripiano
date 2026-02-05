@@ -514,7 +514,7 @@
     
     <!-- Welcome Section -->
     <div class="welcome-section" id="welcomeSection">
-      <div class="welcome-icon">𝄞</div>
+      <div class="welcome-icon">&#119070;</div>
       <h1 class="welcome-title">Where should we begin?</h1>
       <p class="welcome-subtitle">Ask me anything about piano, music theory, composers, or your musical journey</p>
     </div>
@@ -626,13 +626,19 @@
         hideTyping();
 
         if (data.reply) {
-          addMessage(data.reply, 'bot');
+          // Catch API errors that come through as replies
+          const replyLower = data.reply.toLowerCase();
+          if (replyLower.includes('error') && (replyLower.includes('resource exhausted') || replyLower.includes('429') || replyLower.includes('quota') || replyLower.includes('rate limit') || replyLower.includes('try again later'))) {
+            addMessage('Sorry about that! Could you try again in a moment?', 'bot');
+          } else {
+            addMessage(data.reply, 'bot');
+          }
         } else if (data.error) {
-          addMessage('Sorry, something went wrong. Please try again.', 'bot');
+          addMessage('Sorry about that! Could you try again in a moment?', 'bot');
         }
       } catch (error) {
         hideTyping();
-        addMessage('Sorry, I could not connect to the server. Please try again.', 'bot');
+        addMessage('Sorry about that! Could you try again in a moment?', 'bot');
       } finally {
         // Re-enable input
         isLoading = false;
